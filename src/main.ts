@@ -9,10 +9,8 @@ export async function run(): Promise<void> {
   try {
     const settings: ActionSettings = {
       mcVersion: core.getInput('minecraft-version'),
-      forgeType:
-        (core.getInput('forge-type') as 'forge' | 'neoforge') || 'neoforge',
-      channel:
-        (core.getInput('channel') as 'latest' | 'recommended') || 'latest',
+      forgeType: (core.getInput('forge-type') as 'forge' | 'neoforge') || 'neoforge',
+      channel: (core.getInput('channel') as 'latest' | 'recommended') || 'latest',
       latest: core.getBooleanInput('latest') || true
     };
 
@@ -45,8 +43,7 @@ export async function run(): Promise<void> {
 }
 
 async function getNeoForge(settings: ActionSettings): Promise<string | Error> {
-  const url =
-    'https://maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml';
+  const url = 'https://maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml';
 
   try {
     const response = await fetch(url);
@@ -60,19 +57,15 @@ async function getNeoForge(settings: ActionSettings): Promise<string | Error> {
     core.debug('XML Result:');
     core.debug(JSON.stringify(result, null, 2));
 
-    const versions: string[] =
-      result.metadata.versioning[0].versions[0].version;
+    const versions: string[] = result.metadata.versioning[0].versions[0].version;
 
     core.debug('Parsed Versions:');
     core.debug(JSON.stringify(versions, null, 2));
 
-    const mcVersion =
-      settings.mcVersion.split('.').length === 2
-        ? `${settings.mcVersion}.0`
-        : settings.mcVersion;
-    const filteredVersions = versions.filter(version =>
-      version.startsWith(mcVersion.substring(mcVersion.indexOf('.' + 1)))
-    );
+    const mcVersion = settings.mcVersion.split('.').length === 2 ? `${settings.mcVersion}.0` : settings.mcVersion;
+    const searchVersion = mcVersion.substring(mcVersion.indexOf('.' + 1));
+    core.debug(`Search version: ${searchVersion}`);
+    const filteredVersions = versions.filter(version => version.startsWith(searchVersion));
 
     core.debug(`Minecraft Version: ${mcVersion}`);
     core.debug(`Possible versions: ${filteredVersions}`);
@@ -82,26 +75,18 @@ async function getNeoForge(settings: ActionSettings): Promise<string | Error> {
       return latestVersion;
     }
 
-    const recommendedVersions = filteredVersions.filter(
-      version => !version.includes('beta')
-    );
-    const recommendedVersion =
-      recommendedVersions[recommendedVersions.length - 1];
+    const recommendedVersions = filteredVersions.filter(version => !version.includes('beta'));
+    const recommendedVersion = recommendedVersions[recommendedVersions.length - 1];
 
     core.debug(`Recommended Version: ${recommendedVersion}`);
-    return settings.latest
-      ? recommendedVersion || latestVersion
-      : recommendedVersion;
+    return settings.latest ? recommendedVersion || latestVersion : recommendedVersion;
   } catch (error) {
-    return error instanceof Error
-      ? error
-      : new Error('Failed to fetch XML data');
+    return error instanceof Error ? error : new Error('Failed to fetch XML data');
   }
 }
 
 async function getForge(settings: ActionSettings): Promise<string | Error> {
-  const url =
-    'https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json';
+  const url = 'https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json';
 
   try {
     const response = await fetch(url);
@@ -125,9 +110,7 @@ async function getForge(settings: ActionSettings): Promise<string | Error> {
 
     return version;
   } catch (error) {
-    return error instanceof Error
-      ? error
-      : new Error('An unexpected error occurred.');
+    return error instanceof Error ? error : new Error('An unexpected error occurred.');
   }
 }
 

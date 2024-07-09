@@ -1,7 +1,6 @@
 # Action Latest Forge
 
-An action for retrieving the latest version of Forge or NeoForge for any
-Minecraft version.
+An action for retrieving the latest version of Forge or NeoForge for any Minecraft version.
 
 ### Inputs
 
@@ -16,8 +15,7 @@ Minecraft version.
 
 ### `version`
 
-The latest version of Forge or NeoForge for the specified Minecraft version and
-channel.
+The latest version of Forge or NeoForge for the specified Minecraft version and channel.
 
 ## Example Workflow
 
@@ -42,7 +40,5 @@ jobs:
           channel: 'latest'
 
       - name: Display Forge version
-        run:
-          echo "The latest Forge version is ${{
-          steps.get-forge-version.outputs.version }}"
+        run: echo "The latest Forge version is ${{ steps.get-forge-version.outputs.version }}"
 ```

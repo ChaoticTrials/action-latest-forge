@@ -31623,10 +31623,10 @@ async function getNeoForge(settings) {
         const versions = result.metadata.versioning[0].versions[0].version;
         core.debug('Parsed Versions:');
         core.debug(JSON.stringify(versions, null, 2));
-        const mcVersion = settings.mcVersion.split('.').length === 2
-            ? `${settings.mcVersion}.0`
-            : settings.mcVersion;
-        const filteredVersions = versions.filter(version => version.startsWith(mcVersion.substring(mcVersion.indexOf('.' + 1))));
+        const mcVersion = settings.mcVersion.split('.').length === 2 ? `${settings.mcVersion}.0` : settings.mcVersion;
+        const searchVersion = mcVersion.substring(mcVersion.indexOf('.' + 1));
+        core.debug(`Search version: ${searchVersion}`);
+        const filteredVersions = versions.filter(version => version.startsWith(searchVersion));
         core.debug(`Minecraft Version: ${mcVersion}`);
         core.debug(`Possible versions: ${filteredVersions}`);
         const latestVersion = filteredVersions[filteredVersions.length - 1];
@@ -31637,14 +31637,10 @@ async function getNeoForge(settings) {
         const recommendedVersions = filteredVersions.filter(version => !version.includes('beta'));
         const recommendedVersion = recommendedVersions[recommendedVersions.length - 1];
         core.debug(`Recommended Version: ${recommendedVersion}`);
-        return settings.latest
-            ? recommendedVersion || latestVersion
-            : recommendedVersion;
+        return settings.latest ? recommendedVersion || latestVersion : recommendedVersion;
     }
     catch (error) {
-        return error instanceof Error
-            ? error
-            : new Error('Failed to fetch XML data');
+        return error instanceof Error ? error : new Error('Failed to fetch XML data');
     }
 }
 async function getForge(settings) {
@@ -31666,9 +31662,7 @@ async function getForge(settings) {
         return version;
     }
     catch (error) {
-        return error instanceof Error
-            ? error
-            : new Error('An unexpected error occurred.');
+        return error instanceof Error ? error : new Error('An unexpected error occurred.');
     }
 }
 
