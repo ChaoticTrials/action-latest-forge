@@ -63,11 +63,12 @@ async function getNeoForge(settings: ActionSettings): Promise<string | Error> {
     core.debug(JSON.stringify(versions, null, 2));
 
     const mcVersion = settings.mcVersion.split('.').length === 2 ? `${settings.mcVersion}.0` : settings.mcVersion;
-    const searchVersion = mcVersion.substring(mcVersion.indexOf('.' + 1));
-    core.debug(`Search version: ${searchVersion}`);
-    const filteredVersions = versions.filter(version => version.startsWith(searchVersion));
-
     core.debug(`Minecraft Version: ${mcVersion}`);
+
+    const searchVersion = mcVersion.substring(mcVersion.indexOf('.') + 1);
+    const filteredVersions = versions.filter(version => version.startsWith(searchVersion));
+    core.debug(`Search version: ${searchVersion}`);
+
     core.debug(`Possible versions: ${filteredVersions}`);
     const latestVersion = filteredVersions[filteredVersions.length - 1];
     if (settings.channel === 'latest') {
