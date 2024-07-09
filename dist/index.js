@@ -31618,7 +31618,11 @@ async function getNeoForge(settings) {
         }
         const xml = await response.text();
         const result = await (0, xml2js_1.parseStringPromise)(xml);
+        core.debug('XML Result:');
+        core.debug(JSON.stringify(result, null, 2));
         const versions = result.metadata.versioning[0].versions[0].version;
+        core.debug('Parsed Versions:');
+        core.debug(JSON.stringify(versions, null, 2));
         const mcVersion = settings.mcVersion.split('.').length === 2
             ? `${settings.mcVersion}.0`
             : settings.mcVersion;
@@ -31627,12 +31631,12 @@ async function getNeoForge(settings) {
         core.debug(`Possible versions: ${filteredVersions}`);
         const latestVersion = filteredVersions[filteredVersions.length - 1];
         if (settings.channel === 'latest') {
-            core.debug(`Found ${latestVersion}`);
+            core.debug(`Found latest version ${latestVersion}`);
             return latestVersion;
         }
         const recommendedVersions = filteredVersions.filter(version => !version.includes('beta'));
         const recommendedVersion = recommendedVersions[recommendedVersions.length - 1];
-        core.debug(`Possible recommended: ${recommendedVersion}`);
+        core.debug(`Recommended Version: ${recommendedVersion}`);
         return settings.latest
             ? recommendedVersion || latestVersion
             : recommendedVersion;

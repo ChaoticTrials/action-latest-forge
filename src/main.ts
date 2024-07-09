@@ -57,8 +57,14 @@ async function getNeoForge(settings: ActionSettings): Promise<string | Error> {
     const xml = await response.text();
     const result = await parseStringPromise(xml);
 
+    core.debug('XML Result:');
+    core.debug(JSON.stringify(result, null, 2));
+
     const versions: string[] =
       result.metadata.versioning[0].versions[0].version;
+
+    core.debug('Parsed Versions:');
+    core.debug(JSON.stringify(versions, null, 2));
 
     const mcVersion =
       settings.mcVersion.split('.').length === 2
@@ -72,7 +78,7 @@ async function getNeoForge(settings: ActionSettings): Promise<string | Error> {
     core.debug(`Possible versions: ${filteredVersions}`);
     const latestVersion = filteredVersions[filteredVersions.length - 1];
     if (settings.channel === 'latest') {
-      core.debug(`Found ${latestVersion}`);
+      core.debug(`Found latest version ${latestVersion}`);
       return latestVersion;
     }
 
@@ -82,7 +88,7 @@ async function getNeoForge(settings: ActionSettings): Promise<string | Error> {
     const recommendedVersion =
       recommendedVersions[recommendedVersions.length - 1];
 
-    core.debug(`Possible recommended: ${recommendedVersion}`);
+    core.debug(`Recommended Version: ${recommendedVersion}`);
     return settings.latest
       ? recommendedVersion || latestVersion
       : recommendedVersion;
