@@ -31618,7 +31618,10 @@ async function getNeoForge(settings) {
         const xml = await response.text();
         const result = await (0, xml2js_1.parseStringPromise)(xml);
         const versions = result.metadata.versioning[0].versions[0].version;
-        const filteredVersions = versions.filter(version => version.startsWith(settings.mcVersion.substring(settings.mcVersion.indexOf('.' + 1))));
+        const mcVersion = settings.mcVersion.split('.').length === 2
+            ? `${settings.mcVersion}.0`
+            : settings.mcVersion;
+        const filteredVersions = versions.filter(version => version.startsWith(mcVersion.substring(mcVersion.indexOf('.' + 1))));
         const latestVersion = filteredVersions[filteredVersions.length - 1];
         if (settings.channel === 'latest') {
             return latestVersion;

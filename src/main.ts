@@ -59,10 +59,12 @@ async function getNeoForge(settings: ActionSettings): Promise<string | Error> {
     const versions: string[] =
       result.metadata.versioning[0].versions[0].version;
 
+    const mcVersion =
+      settings.mcVersion.split('.').length === 2
+        ? `${settings.mcVersion}.0`
+        : settings.mcVersion;
     const filteredVersions = versions.filter(version =>
-      version.startsWith(
-        settings.mcVersion.substring(settings.mcVersion.indexOf('.' + 1))
-      )
+      version.startsWith(mcVersion.substring(mcVersion.indexOf('.' + 1)))
     );
 
     const latestVersion = filteredVersions[filteredVersions.length - 1];
