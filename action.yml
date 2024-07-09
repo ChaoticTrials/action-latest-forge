@@ -1,0 +1,29 @@
+name: 'action-latest-forge'
+description:
+  'An action for getting the latest version of forge or neoforge for any
+  minecraft version'
+author: 'MelanX'
+
+# Define your inputs here.
+inputs:
+  minecraft-version:
+    required: true
+    description: 'The Minecraft version to get the version for'
+  forge-type:
+    required: false
+    description: 'Either "forge" or "neoforge"'
+    default: 'neoforge'
+  channel:
+    required: false
+    description: 'Either "latest" or "recommended"'
+    default: 'latest'
+  latest:
+    required: false
+    description:
+      'Whether the "latest" version should be returned if no "recommended"
+      version is present'
+    default: 'true'
+
+runs:
+  using: node20
+  main: dist/index.js
