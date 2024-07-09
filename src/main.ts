@@ -35,6 +35,7 @@ export async function run(): Promise<void> {
       return;
     }
 
+    core.debug(`Final version: ${version}`);
     core.setOutput('version', version);
   } catch (error) {
     if (error instanceof Error) {
@@ -67,8 +68,11 @@ async function getNeoForge(settings: ActionSettings): Promise<string | Error> {
       version.startsWith(mcVersion.substring(mcVersion.indexOf('.' + 1)))
     );
 
+    core.debug(`Minecraft Version: ${mcVersion}`);
+    core.debug(`Possible versions: ${filteredVersions}`);
     const latestVersion = filteredVersions[filteredVersions.length - 1];
     if (settings.channel === 'latest') {
+      core.debug(`Found ${latestVersion}`);
       return latestVersion;
     }
 
@@ -78,6 +82,7 @@ async function getNeoForge(settings: ActionSettings): Promise<string | Error> {
     const recommendedVersion =
       recommendedVersions[recommendedVersions.length - 1];
 
+    core.debug(`Possible recommended: ${recommendedVersion}`);
     return settings.latest
       ? recommendedVersion || latestVersion
       : recommendedVersion;

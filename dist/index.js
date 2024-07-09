@@ -31600,6 +31600,7 @@ async function run() {
             core.setFailed(version.message);
             return;
         }
+        core.debug(`Final version: ${version}`);
         core.setOutput('version', version);
     }
     catch (error) {
@@ -31622,12 +31623,16 @@ async function getNeoForge(settings) {
             ? `${settings.mcVersion}.0`
             : settings.mcVersion;
         const filteredVersions = versions.filter(version => version.startsWith(mcVersion.substring(mcVersion.indexOf('.' + 1))));
+        core.debug(`Minecraft Version: ${mcVersion}`);
+        core.debug(`Possible versions: ${filteredVersions}`);
         const latestVersion = filteredVersions[filteredVersions.length - 1];
         if (settings.channel === 'latest') {
+            core.debug(`Found ${latestVersion}`);
             return latestVersion;
         }
         const recommendedVersions = filteredVersions.filter(version => !version.includes('beta'));
         const recommendedVersion = recommendedVersions[recommendedVersions.length - 1];
+        core.debug(`Possible recommended: ${recommendedVersion}`);
         return settings.latest
             ? recommendedVersion || latestVersion
             : recommendedVersion;
